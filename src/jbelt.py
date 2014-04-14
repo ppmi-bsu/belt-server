@@ -1,0 +1,29 @@
+
+from py4j.java_gateway import JavaGateway
+
+gateway = JavaGateway()
+
+point = gateway.entry_point
+signer = point.getSigner()
+verificator = point.getVerificator()
+keyManager = point.getKeyManager()
+
+
+def calc_keys(bytes):
+    return keyManager.calcKeyPair(bytearray(bytes))
+
+
+def sign(xml, keys=keyManager.generateKeyPair()):
+    return point.getBXS().sign(xml, keys)
+
+
+def genKeys():
+    keys = keyManager.generateKeyPair()
+    return {
+        'priv': keys.getPrivate().getBytes(),
+        'pub': keys.getPublic().getBytes()
+    }
+
+
+def verify(xml):
+    return point.getBXS().verify(xml)

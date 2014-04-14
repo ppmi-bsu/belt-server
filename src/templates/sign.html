@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+<form action="" method="post">
+    Личный ключ <textarea name="key" style=" height: auto; width: 100%">{{ key }}</textarea> <br>
+
+    <table style="width: 100%">
+        <tr>
+            <th> Исходный XML  <input type="submit" formaction="?sign" value="Подписать"/></th>
+            <th> Подписанный <input type="submit" formaction="?verify" value="Проверить"/></th>
+        </tr>
+
+        <tr>
+            <td style="padding: 5px">
+            <textarea name="xml" style=" height: 700px; width: 100%;">{{ xml }}</textarea>
+            </td>
+            <td style="padding: 5px">
+            <textarea name="signed" style=" height: 700px; width: 100%;
+             color: {%if is_valid%}limegreen{%else%}red{%endif%}">{{ signed }}</textarea>
+            </td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+
+
+</form>
+
+</body>
+</html>
