@@ -7,11 +7,15 @@ import jbelt
 import base64
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+app.config['ALLOWED_EXTENSIONS'] = set(['xml'])
 
 
-@app.route('/genkeys')
+@app.route('/genkeys', methods=['get', 'post'])
 def genkeys():
-    keys = jbelt.genKeys()
+    length = request.form['length'] if request.method == 'POST' else 128
+
+    keys = jbelt.genKeys(int(length))
 
     keys['priv'] = base64.b64encode(str(keys['priv']))
     keys['pub'] = base64.b64encode(str(keys['pub']))
@@ -21,6 +25,13 @@ def genkeys():
 @app.route('/sign', methods=['get', 'post'])
 def sign():
     if request.method == 'POST':
+
+        key = request.form['key'].strip()
+
+        if 'upload' in request.query_string:
+            file = request.files['file']
+            return render_template('sign.html', xml=file.read(), signed='', key=key, is_valid=True)
+
         key = request.form['key'].strip()
         xml = request.form['xml'].strip()
         signed = request.form['signed'].strip()

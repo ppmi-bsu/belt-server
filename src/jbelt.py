@@ -17,7 +17,8 @@ def sign(xml, keys=keyManager.generateKeyPair()):
     return point.getBXS().sign(xml, keys)
 
 
-def genKeys():
+def genKeys(length=128):
+    keyManager.initialize(length)
     keys = keyManager.generateKeyPair()
     return {
         'priv': keys.getPrivate().getBytes(),
