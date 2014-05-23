@@ -104,3 +104,8 @@ class BeltGatewayTestCase(TestCase):
         keys = jbelt.genKeys()
         self.assertEqual(jbelt.calc_keys(keys['priv']).getPublic().getBytes(),
                          keys['pub'])
+
+    def test_encryption(self):
+        keys = jbelt.genKeys()
+        ecrypted = jbelt.enc(test_xml, str(keys['pub']))
+        jbelt.dec(ecrypted, str(keys['priv']))

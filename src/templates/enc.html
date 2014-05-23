@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Шифрование</title>
+</head>
+<body>
+
+ <form action="enc" method="POST">
+     Открытый ключ <textarea name='key' style="width: 500px">{{ pub }}</textarea> <br>
+
+     <textarea id="xml" name="xml" style="width: 100%; height: 400px">{{xml}}</textarea> <br>
+
+     <button type="submit">Зашифровать</button>
+ </form>
+</body>
+</html>

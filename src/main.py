@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
 from flask.templating import render_template
-import os
-from flask import Flask, request#, url_for
-from string import Template
+from flask import Flask, request
 import jbelt
 import base64
 
@@ -22,6 +21,32 @@ def genkeys():
     return render_template('keys.html', **keys)
 
 
+def prettify(xml):
+    parser = etree.XMLParser(remove_blank_text=True)
+    parsed = etree.fromstring(xml, parser)
+    return etree.tostring(parsed, pretty_print=True)
+
+
+@app.route('/enc', methods=['get', 'post'])
+def enc():
+
+    if request.method == 'GET':
+        return render_template('enc.html')
+
+    key = request.form['key'].strip()
+    xml = request.form['xml'].strip()
+    encrypted = jbelt.enc(xml, base64.b64decode(key))
+    return render_template('dec.html', xml=prettify(encrypted), button_label=u'Зашифровать')
+
+
+@app.route('/dec', methods=['post'])
+def dec():
+    key = request.form['key'].strip()
+    xml = request.form['xml'].strip()
+    decrypted = jbelt.dec(xml, base64.b64decode(key))
+    return render_template('enc.html', xml=decrypted)
+
+
 @app.route('/sign', methods=['get', 'post'])
 def sign():
     if request.method == 'POST':
@@ -38,7 +63,6 @@ def sign():
         is_valid = False
         if 'verify' in request.query_string:
             is_valid = jbelt.verify(signed)
-
         elif key and xml:
             signed = jbelt.sign(xml, keys=jbelt.calc_keys(base64.b64decode(key)))
             is_valid = jbelt.verify(signed)

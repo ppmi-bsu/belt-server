@@ -28,3 +28,11 @@ def genKeys(length=128):
 
 def verify(xml):
     return point.getBXS().verify(xml)
+
+
+def enc(xml, pubKeyBytes):
+    return point.getBXS().enc(xml, bytearray(str(pubKeyBytes)))
+
+
+def dec(xml, privKeyBytes):
+    return point.getBXS().dec(xml, bytearray(str(privKeyBytes)))
